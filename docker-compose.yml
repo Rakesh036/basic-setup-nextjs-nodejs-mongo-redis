@@ -1,0 +1,48 @@
+
+networks:
+  rakeshNetwork:
+    driver: bridge
+services:
+  client:
+    build: ./client
+    ports:
+      - 3000:3000
+    networks:
+      - rakeshNetwork
+    depends_on:
+      - server
+    volumes:
+      - ./client:/app  # Mount local client code
+      - /app/node_modules  # Prevents overwriting node_modules in the container
+    environment:
+      - CHOKIDAR_USEPOLLING=true # May be needed for file watching in some environments
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile.dev  # Use a development-specific Dockerfile
+    ports:
+      - 8080:8080
+    networks:
+      - rakeshNetwork
+    depends_on:
+      - mongo
+      - redis
+    volumes:
+      - ./server:/app  # Mount local server code
+      - /app/node_modules  # Prevents overwriting node_modules in the container
+    command: npm run dev # Override the CMD in Dockerfile to use nodemon
+  mongo:
+    image: mongo:6.0
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - rakeshNetwork
+  redis:
+    image: redis:7.0
+    networks:
+      - rakeshNetwork
+    volumes:
+      - redis_data:/data
+volumes:
+  mongo_data:
+  redis_data:

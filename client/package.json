@@ -5,7 +5,7 @@
   "author": "Rakesh Kumar",
   "description": "A basic authentication system using Node.js, Express, MongoDB, and Next.js with user signup, login, logout, forgot password functionality, and protected routes using sessions or JWT.",
   "scripts": {
-    "dev": "next dev --turbopack",
+    "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",

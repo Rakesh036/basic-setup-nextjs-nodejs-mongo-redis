@@ -1,0 +1,76 @@
+
+networks:
+  rakeshNetwork:
+    driver: bridge
+
+services:
+  client:
+    build: ./client
+    ports:
+      - "3001:3000"
+    depends_on:
+      server:
+        condition: service_healthy
+    environment:
+      - NEXT_PUBLIC_API_BASE_URL=http://server:8080/api
+      - NODE_ENV=development  # Change to 'production' for prod
+    volumes:
+      - ./client:/app
+      - /app/node_modules
+    networks:
+      - rakeshNetwork
+
+  server:
+    build: ./server
+    ports:
+      - "8081:8080"
+    depends_on:
+      mongo:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      - PORT=8080
+      - MONGO_URI=mongodb://mongo:27017/auth-db
+      - REDIS_URL=redis://redis:6379
+      - JWT_EXPIRES_IN=1h
+      - JWT_SECRET=${JWT_SECRET}
+    volumes:
+      - ./server:/app
+      - /app/node_modules
+    networks:
+      - rakeshNetwork
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:8080', (res) => process.exit(res.statusCode === 200 ? 0 : 1)).on('error', () => process.exit(1))"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  mongo:
+    image: mongo:6.0
+    ports:
+      - "27018:27017"
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - rakeshNetwork
+    healthcheck:
+      test: ["CMD", "mongo", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7.0-alpine
+    ports:
+      - "6380:6379"
+    networks:
+      - rakeshNetwork
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  mongo-data:

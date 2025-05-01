@@ -1,0 +1,19 @@
+node_modules
+.env
+.env.development
+.env.local
+# If you have any test files/directories
+test/
+tests/
+__tests__/
+*.test.js
+*.spec.js
+# Any debug or log files
+debug.log
+*.log
+# Editor specific files
+.vscode/
+.idea/
+# Other temporary build artifacts
+build/
+dist/

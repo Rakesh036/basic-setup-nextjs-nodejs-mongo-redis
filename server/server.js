@@ -3,22 +3,26 @@ dotenv.config();
 import express from 'express';
 import { connectMongoDB, connectRedis } from './config/dbRedisConnect.js';
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
 import testRoutes from './routes/testRoutes.js';
+import authRoutes from './routes/authRoutes.js';
 
 const app = express();
 const PORT = process.env.PORT || 8080;
 
-// Restrict CORS to client origin
-app.use(cors());
-
+// Middleware
 app.use(express.json());
-
+app.use(cookieParser());
+app.use(cors({
+    origin: process.env.CLIENT_ORIGIN || 'http://localhost:3000',
+    credentials: true
+}));
 app.get('/', (req, res) => {
     res.send('Hello World!');
 });
 
 app.use('/api/test', testRoutes);
-
+app.use('/api/auth', authRoutes);
 app.get('/api/hello', (req, res) => {
     res.json({ message: 'Hello from Node.js/Express Server!' });
 }

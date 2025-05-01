@@ -13,7 +13,16 @@ export default function Home() {
       <Link href="/test" className="mt-25">
         <Button variant="destructive">Test route</Button>
       </Link>
-      <br /><b><hr /><hr /><hr /><hr /> okk good</b>
+      <Link href="/login" className="mt-2">
+        <Button variant="destructive">Login page</Button>
+      </Link>
+      <br />
+      <b>
+        <hr />
+        <hr />
+        <hr />
+        <hr /> okk good
+      </b>
       <p className="mt-2 text-sm text-gray-500">Additional information can go here.</p>
       <p className="mt-2 text-sm text-gray-500">More details can be added here.</p>
     </div>

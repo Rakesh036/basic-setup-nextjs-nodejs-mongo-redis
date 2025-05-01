@@ -1,42 +1,21 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { CheckCircle, XCircle, RefreshCw, ChevronLeft, AlertTriangle } from 'lucide-react';
+import { RefreshCw, ChevronLeft, AlertTriangle, Server, Network, Container } from 'lucide-react';
+import { useSystemStatus } from '@/hooks/useSystemStatus';
+import { Overview } from '@/components/system/Overview';
+import { Containers } from '@/components/system/Containers';
+import { NetworkComponent  } from '@/components/system/Network';
 
 const Test = () => {
-  const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [activeTab, setActiveTab] = useState('overview');
+  const { data, loading, error, fetchData } = useSystemStatus(
+    activeTab === 'overview' ? 'pingAll' : activeTab === 'network' ? 'network' : 'containers'
+  );
 
-  const fetchData = async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      console.log('Fetching data...');
-      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_BASE_URL}/api/test/pingAll`);
-      if (!res.ok) {
-        throw new Error(`HTTP error! status: ${res.status}`);
-      }
-      const responseData = await res.json();
-      console.log('Data fetched:', responseData);
-      setData(responseData);
-    } catch (err) {
-      console.error('Error fetching data:', err);
-      setError('Failed to fetch data. Please try again.');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchData();
-  }, []);
-
-  const getStatusIcon = (status) => {
-    if (status === 'OK') {
-      return <CheckCircle className="text-green-500 h-5 w-5" />;
-    }
-    return <XCircle className="text-red-500 h-5 w-5" />;
+  const handleTabChange = (tab) => {
+    setActiveTab(tab);
+    fetchData(tab === 'overview' ? 'pingAll' : tab === 'network' ? 'network' : 'containers');
   };
 
   return (
@@ -61,150 +40,48 @@ const Test = () => {
           </div>
         )}
 
+        <div className="mb-8 flex justify-center space-x-4">
+          <Button
+            onClick={() => handleTabChange('overview')}
+            className={`inline-flex items-center px-4 py-2 ${activeTab === 'overview' ? 'bg-blue-600' : ''}`}
+          >
+            <Server className="mr-2 h-4 w-4" />
+            Services
+          </Button>
+          <Button
+            onClick={() => handleTabChange('network')}
+            className={`inline-flex items-center px-4 py-2 ${activeTab === 'network' ? 'bg-blue-600' : ''}`}
+          >
+            <Network className="mr-2 h-4 w-4" />
+            Network
+          </Button>
+          <Button
+            onClick={() => handleTabChange('containers')}
+            className={`inline-flex items-center px-4 py-2 ${activeTab === 'containers' ? 'bg-blue-600' : ''}`}
+          >
+            <Container className="mr-2 h-4 w-4" />
+            Containers
+          </Button>
+        </div>
+
         <div className="bg-white shadow overflow-hidden rounded-lg mb-8">
-          <div className="px-4 py-5 sm:px-6 flex justify-between items-center">
-            <div>
-              <h2 className="text-lg font-medium text-gray-900">API Status Overview</h2>
-              <p className="mt-1 text-sm text-gray-500">Current health status of all system components</p>
-              <p className="mt-1 text-sm text-gray-500">
-                Hitting endpoint: {`${process.env.NEXT_PUBLIC_SERVER_BASE_URL}/api/test/pingAll`}
-              </p>
-            </div>
-            <div className="flex items-center">
-              {loading ? (
-                <RefreshCw className="animate-spin h-5 w-5 text-gray-500" />
-              ) : (
-                <div
-                  className={`px-3 py-1 rounded-full text-sm font-medium ${data?.status === 'summary' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-                    }`}
-                >
-                  {data?.status}
-                </div>
-              )}
-            </div>
-          </div>
-
-          {data && data.mainService && (
-            <div className="border-t border-gray-200 px-4 py-4 bg-blue-50">
-              <h3 className="text-md font-medium text-blue-800 mb-2">Main Service Information</h3>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-sm">
-                <div>
-                  <span className="text-blue-700 font-medium">Location:</span> {data.mainService.location}
-                </div>
-                <div>
-                  <span className="text-blue-700 font-medium">Environment:</span> {data.mainService.environment}
-                </div>
-                <div>
-                  <span className="text-blue-700 font-medium">Host:</span> {data.mainService.host}
-                </div>
-                <div>
-                  <span className="text-blue-700 font-medium">Port:</span> {data.mainService.port}
-                </div>
-                <div>
-                  <span className="text-blue-700 font-medium">Docker:</span> {data.mainService.isDocker.toString()}
-                </div>
-              </div>
-            </div>
-          )}
-
           {loading ? (
             <div className="px-4 py-12 sm:px-6 text-center">
               <RefreshCw className="animate-spin h-8 w-8 text-gray-400 mx-auto mb-4" />
               <p className="text-gray-500">Loading status information...</p>
             </div>
-          ) : data ? (
-            <div className="border-t border-gray-200">
-              <div className="overflow-x-auto">
-                <table className="min-w-full divide-y divide-gray-200">
-                  <thead className="bg-gray-50">
-                    <tr>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Component
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Status
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Name
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Host
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Port
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Environment
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Location
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        Docker
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        URL
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="bg-white divide-y divide
-
--gray-200">
-                    {Object.entries(data.results || {}).map(([key, value], index) => (
-                      <tr key={key} className={index % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 capitalize">
-                          {key}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                          <div className="flex items-center">
-                            {getStatusIcon(value.status)}
-                            <span
-                              className={`ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${value.status === 'OK'
-                                  ? 'bg-green-100 border-green-300 text-green-800'
-                                  : 'bg-red-100 border-red-300 text-red-800'
-                                }`}
-                            >
-                              {value.status}
-                            </span>
-                          </div>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                          {value.service?.name || '-'}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                          {value.service?.host || '-'}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                          {value.service?.port || '-'}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                          {value.service?.environment || '-'}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                          {value.service?.location || '-'}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                          {value.service?.isDocker !== undefined ? value.service.isDocker.toString() : '-'}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                          {value.service?.url || '-'}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
           ) : (
-            <div className="px-4 py-5 sm:px-6 text-center">
-              <p className="text-gray-500">No data available</p>
+              <div className="px-4 py-5 sm:px-6">
+                {activeTab === 'overview' && <Overview data={data} />}
+                {activeTab === 'network' && <NetworkComponent data={data} />}
+                {activeTab === 'containers' && <Containers data={data} />}
             </div>
           )}
         </div>
 
         <div className="flex justify-center space-x-4">
           <Button
-            onClick={fetchData}
+            onClick={() => fetchData(activeTab === 'overview' ? 'pingAll' : activeTab === 'network' ? 'network' : 'containers')}
             className="inline-flex items-center px-4 py-2"
             disabled={loading}
           >
@@ -221,22 +98,6 @@ const Test = () => {
             Back
           </Button>
         </div>
-
-        {data && (
-          <div className="mt-8 bg-white shadow overflow-hidden rounded-lg">
-            <div className="px-4 py-5 sm:px-6">
-              <h3 className="text-lg font-medium text-gray-900">Raw Response Data</h3>
-              <p className="mt-1 text-sm text-gray-500">JSON response from the API endpoint</p>
-            </div>
-            <div className="border-t border-gray-200">
-              <div className="px-4 py-5 sm:px-6">
-                <pre className="bg-gray-50 p-4 rounded-md overflow-auto text-xs">
-                  {JSON.stringify(data, null, 2)}
-                </pre>
-              </div>
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );

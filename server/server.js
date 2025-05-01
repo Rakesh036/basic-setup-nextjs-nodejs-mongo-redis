@@ -10,11 +10,17 @@ import authRoutes from './routes/authRoutes.js';
 const app = express();
 const PORT = process.env.PORT || 8080;
 
+app.use('/', (req, res, next) => {
+    console.log(`Request URL: ${req.url}`);
+    next();
+})
+
+
 // Middleware
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors({
-    origin: process.env.CLIENT_ORIGIN || 'http://localhost:3000',
+    origin: process.env.CLIENT_ORIGIN || 'http://localhost:3001',
     credentials: true
 }));
 app.get('/', (req, res) => {

@@ -1,7 +1,17 @@
+'use client';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
+import { useEffect } from 'react';
 
 export default function Home() {
+
+  useEffect(() => {
+    fetch('/api/hello')
+      .then(res => res.text())
+      .then(data => console.log(data))
+      .catch(err => console.error('Error:', err));
+  }, []);
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-24">
       <h1 className="text-4xl font-bold">Hello, World23232!</h1>

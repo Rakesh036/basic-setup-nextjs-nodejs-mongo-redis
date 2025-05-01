@@ -32,7 +32,7 @@ services:
       - /app/node_modules  # Prevents overwriting node_modules in the container
     command: npm run dev # Override the CMD in Dockerfile to use nodemon
   mongo:
-    image: mongo:6.0
+    image: mongo:7.0.20-jammy
     volumes:
       - mongo_data:/data/db
     networks:

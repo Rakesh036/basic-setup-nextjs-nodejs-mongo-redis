@@ -13,7 +13,6 @@ const Test = () => {
     setError(null);
     try {
       console.log('Fetching data...');
-
       const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_BASE_URL}/api/test/pingAll`);
       if (!res.ok) {
         throw new Error(`HTTP error! status: ${res.status}`);
@@ -35,18 +34,14 @@ const Test = () => {
 
   const getStatusIcon = (status) => {
     if (status === 'OK') {
-      return <CheckCircle className="text-green-500" />;
+      return <CheckCircle className="text-green-500 h-5 w-5" />;
     }
-    return <XCircle className="text-red-500" />;
-  };
-
-  const getStatusColor = (status) => {
-    return status === 'OK' ? 'bg-green-100 border-green-300 text-green-800' : 'bg-red-100 border-red-300 text-red-800';
+    return <XCircle className="text-red-500 h-5 w-5" />;
   };
 
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-3xl mx-auto">
+      <div className="max-w-7xl mx-auto">
         <div className="text-center mb-12">
           <h1 className="text-3xl font-extrabold text-gray-900 sm:text-4xl">System Status</h1>
           <p className="mt-3 text-xl text-gray-500">Real-time monitoring of system components</p>
@@ -71,17 +66,46 @@ const Test = () => {
             <div>
               <h2 className="text-lg font-medium text-gray-900">API Status Overview</h2>
               <p className="mt-1 text-sm text-gray-500">Current health status of all system components</p>
+              <p className="mt-1 text-sm text-gray-500">
+                Hitting endpoint: {`${process.env.NEXT_PUBLIC_SERVER_BASE_URL}/api/test/pingAll`}
+              </p>
             </div>
             <div className="flex items-center">
               {loading ? (
                 <RefreshCw className="animate-spin h-5 w-5 text-gray-500" />
               ) : (
-                <div className={`px-3 py-1 rounded-full text-sm font-medium ${data?.status === "summary" ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`}>
+                <div
+                  className={`px-3 py-1 rounded-full text-sm font-medium ${data?.status === 'summary' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                    }`}
+                >
                   {data?.status}
                 </div>
               )}
             </div>
           </div>
+
+          {data && data.mainService && (
+            <div className="border-t border-gray-200 px-4 py-4 bg-blue-50">
+              <h3 className="text-md font-medium text-blue-800 mb-2">Main Service Information</h3>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-sm">
+                <div>
+                  <span className="text-blue-700 font-medium">Location:</span> {data.mainService.location}
+                </div>
+                <div>
+                  <span className="text-blue-700 font-medium">Environment:</span> {data.mainService.environment}
+                </div>
+                <div>
+                  <span className="text-blue-700 font-medium">Host:</span> {data.mainService.host}
+                </div>
+                <div>
+                  <span className="text-blue-700 font-medium">Port:</span> {data.mainService.port}
+                </div>
+                <div>
+                  <span className="text-blue-700 font-medium">Docker:</span> {data.mainService.isDocker.toString()}
+                </div>
+              </div>
+            </div>
+          )}
 
           {loading ? (
             <div className="px-4 py-12 sm:px-6 text-center">
@@ -90,21 +114,86 @@ const Test = () => {
             </div>
           ) : data ? (
             <div className="border-t border-gray-200">
-              <dl>
-                {Object.entries(data.results || {}).map(([key, value], index) => (
-                  <div key={key} className={`${index % 2 === 0 ? 'bg-gray-50' : 'bg-white'} px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6`}>
-                    <dt className="text-sm font-medium text-gray-500 capitalize">{key}</dt>
-                    <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                      <div className="flex items-center">
-                        {getStatusIcon(value)}
-                        <span className={`ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(value)}`}>
-                          {value}
-                        </span>
-                      </div>
-                    </dd>
-                  </div>
-                ))}
-              </dl>
+              <div className="overflow-x-auto">
+                <table className="min-w-full divide-y divide-gray-200">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Component
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Status
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Name
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Host
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Port
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Environment
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Location
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Docker
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        URL
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="bg-white divide-y divide
+
+-gray-200">
+                    {Object.entries(data.results || {}).map(([key, value], index) => (
+                      <tr key={key} className={index % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 capitalize">
+                          {key}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          <div className="flex items-center">
+                            {getStatusIcon(value.status)}
+                            <span
+                              className={`ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${value.status === 'OK'
+                                  ? 'bg-green-100 border-green-300 text-green-800'
+                                  : 'bg-red-100 border-red-300 text-red-800'
+                                }`}
+                            >
+                              {value.status}
+                            </span>
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          {value.service?.name || '-'}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          {value.service?.host || '-'}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          {value.service?.port || '-'}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          {value.service?.environment || '-'}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          {value.service?.location || '-'}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          {value.service?.isDocker !== undefined ? value.service.isDocker.toString() : '-'}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          {value.service?.url || '-'}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           ) : (
             <div className="px-4 py-5 sm:px-6 text-center">
@@ -141,7 +230,9 @@ const Test = () => {
             </div>
             <div className="border-t border-gray-200">
               <div className="px-4 py-5 sm:px-6">
-                <pre className="bg-gray-50 p-4 rounded-md overflow-auto text-xs">{JSON.stringify(data, null, 2)}</pre>
+                <pre className="bg-gray-50 p-4 rounded-md overflow-auto text-xs">
+                  {JSON.stringify(data, null, 2)}
+                </pre>
               </div>
             </div>
           </div>

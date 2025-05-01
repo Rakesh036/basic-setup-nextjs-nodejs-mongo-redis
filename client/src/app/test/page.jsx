@@ -13,9 +13,8 @@ const Test = () => {
     setError(null);
     try {
       console.log('Fetching data...');
-      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_BASE_URL}/api/test/pingAll`, {
-        credentials: 'include'
-      });
+
+      const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_BASE_URL}/api/test/pingAll`);
       if (!res.ok) {
         throw new Error(`HTTP error! status: ${res.status}`);
       }

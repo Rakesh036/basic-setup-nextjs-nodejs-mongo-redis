@@ -10,7 +10,8 @@ export const useSystemStatus = (initialEndpoint = 'pingAll') => {
         setError(null);
         try {
             console.log('Fetching data...');
-            const res = await fetch(`/api/test/${endpoint}`, {
+            console.log('hitting url is:', `${process.env.NEXT_PUBLIC_SERVER_BASE_URL}/api/test/${endpoint}`);
+            const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_BASE_URL}/api/test/${endpoint}`, {
                 credentials: 'include',
             });
             if (!res.ok) {

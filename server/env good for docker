@@ -1,0 +1,6 @@
+# /server/.env.docker
+PORT=8080
+MONGO_URI=mongodb://mongo:27017/basic-auth-db
+REDIS_URL=redis://redis:6379
+FRONTEND_URL=http://client:3001
+JWT_SECRET=your_actual_secret_key_12345

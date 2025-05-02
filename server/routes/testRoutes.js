@@ -9,6 +9,12 @@ import { promisify } from 'util';
 
 const execAsync = promisify(exec);
 
+router.use('/', (req, res, next) => {
+  console.log('Request received:', req.method, req.url);
+  next();
+});
+
+
 // Enhanced Docker detection
 const isDocker = () => {
   try {

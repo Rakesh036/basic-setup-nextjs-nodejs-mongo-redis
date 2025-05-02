@@ -1,7 +1,7 @@
 'use client';
+
 import { Button } from '@/components/ui/button';
 import useAuth from '@/hooks/useAuth';
-import { toast } from 'sonner';
 
 export default function Login() {
   const {
@@ -21,7 +21,7 @@ export default function Login() {
   return (
     <div className="flex items-center justify-center min-h-screen p-4 w-[100vw]">
       <div className="w-full max-w-md">
-        <div className=" shadow-md rounded-lg p-6">
+        <div className="shadow-md rounded-lg p-6">
           <h1 className="text-2xl font-bold text-center mb-6">
             {isSignUp ? 'Create an Account' : 'Sign In'}
           </h1>

@@ -1,0 +1,172 @@
+[
+  {
+    "id": "1",
+    "name": "Tech Alumni Network",
+    "description": "A group for technology graduates to network and share opportunities.",
+    "image": "/groupCover.jpg",
+    "isPublic": true,
+    "cluster": "tech",
+    "owner": {
+      "id": "user-1",
+      "name": "John Smith",
+      "avatar": "/avatar.webp"
+    },
+    "members": [
+      {
+        "id": "user-2",
+        "name": "Sarah Johnson",
+        "avatar": "/avatar.webp",
+        "role": "member"
+      },
+      {
+        "id": "user-3",
+        "name": "Michael Chen",
+        "avatar": "/avatar.webp",
+        "role": "member"
+      }
+    ],
+    "chat": {
+      "messages": [
+        {
+          "id": "msg-1",
+          "userId": "user-1",
+          "text": "Welcome everyone to our new Tech Alumni group!",
+          "timestamp": "2023-05-01T12:00:00Z"
+        },
+        {
+          "id": "msg-2",
+          "userId": "user-2",
+          "text": "Thanks for setting this up, excited to connect!",
+          "timestamp": "2023-05-01T12:05:00Z"
+        }
+      ]
+    },
+    "announcements": [
+      {
+        "id": "ann-1",
+        "title": "Monthly Virtual Meetup",
+        "content": "We'll be hosting our first monthly meetup next Friday at 6PM. Join us to discuss the latest in tech!",
+        "timestamp": "2023-05-01T12:00:00Z"
+      }
+    ],
+    "quizzes": [
+      {
+        "id": "quiz-1",
+        "title": "Technology Trends 2023",
+        "description": "Test your knowledge on the latest tech trends.",
+        "dueDate": "2023-05-15T23:59:59Z",
+        "questions": [
+          {
+            "id": "q-1",
+            "text": "Which AI model made headlines in 2023?",
+            "type": "multiple-choice",
+            "options": ["GPT-3", "GPT-4", "BERT", "DALL-E"],
+            "correctAnswer": 1
+          },
+          {
+            "id": "q-2",
+            "text": "What technology underpins most cryptocurrencies?",
+            "type": "multiple-choice",
+            "options": ["Blockchain", "Neural Networks", "Quantum Computing", "Cloud Storage"],
+            "correctAnswer": 0
+          }
+        ]
+      }
+    ],
+    "posts": [
+      {
+        "id": "post-1",
+        "userId": "user-2",
+        "content": "Just got certified in AWS! Happy to help anyone studying for their exams.",
+        "timestamp": "2023-05-01T14:30:00Z",
+        "reactions": {
+          "like": 5,
+          "heart": 2
+        }
+      }
+    ],
+    "resources": [
+      {
+        "id": "res-1",
+        "title": "Web Development Roadmap 2023",
+        "type": "link",
+        "url": "https://example.com/webdev-roadmap",
+        "addedBy": "user-1",
+        "timestamp": "2023-05-01T12:00:00Z"
+      },
+      {
+        "id": "res-2",
+        "title": "Intro to AI Ethics",
+        "type": "pdf",
+        "url": "/resources/ai-ethics.pdf",
+        "addedBy": "user-3",
+        "timestamp": "2023-05-02T09:15:00Z"
+      }
+    ],
+    "projects": [
+      {
+        "id": "proj-1",
+        "title": "Alumni Portal Enhancement",
+        "description": "Working on new features for our alumni portal.",
+        "members": ["user-1", "user-2"],
+        "milestones": [
+          {
+            "id": "mile-1",
+            "title": "Requirements Gathering",
+            "dueDate": "2023-05-15T23:59:59Z",
+            "tasks": [
+              {
+                "id": "task-1",
+                "title": "Survey Current Users",
+                "status": "completed",
+                "assignedTo": "user-2"
+              },
+              {
+                "id": "task-2",
+                "title": "Document Feature Requests",
+                "status": "in-progress",
+                "assignedTo": "user-1"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "2",
+    "name": "Business Leadership Circle",
+    "description": "For alumni interested in business leadership and entrepreneurship.",
+    "image": "/groupCover.jpg",
+    "isPublic": true,
+    "cluster": "business",
+    "owner": {
+      "id": "user-4",
+      "name": "Lisa Wang",
+      "avatar": "/avatar.webp"
+    },
+    "members": [
+      {
+        "id": "user-5",
+        "name": "Robert Johnson",
+        "avatar": "/avatar.webp",
+        "role": "member"
+      }
+    ],
+    "chat": {
+      "messages": [
+        {
+          "id": "msg-3",
+          "userId": "user-4",
+          "text": "Welcome to the Business Leadership Circle!",
+          "timestamp": "2023-05-02T10:00:00Z"
+        }
+      ]
+    },
+    "announcements": [],
+    "quizzes": [],
+    "posts": [],
+    "resources": [],
+    "projects": []
+  }
+]

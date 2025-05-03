@@ -19,7 +19,7 @@ router.use('/', (req, res, next) => {
 const isDocker = () => {
   try {
     // Check for .dockerenv file
-    if (fs.existsSync('/.dockerenv')) return true;
+    // if (fs.existsSync('/.dockerenv')) return true;
 
     // Check cgroup for docker
     if (fs.existsSync('/proc/self/cgroup')) {
@@ -42,7 +42,7 @@ const isDocker = () => {
 };
 
 // Environment detection
-const isRunningInDocker = isDocker();
+// const isRunningInDocker = isDocker();
 const HOST = process.env.HOST || os.hostname();
 const PORT = process.env.PORT || 8080;
 const ENVIRONMENT = process.env.NODE_ENV || "development";

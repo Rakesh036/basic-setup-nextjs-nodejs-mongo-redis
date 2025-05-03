@@ -2,8 +2,9 @@
 
 import { Button } from '@/components/ui/button';
 import useAuth from '@/hooks/useAuth';
+import { useEffect } from 'react';
 
-export default function Login({isLogin}) {
+export default function Login() {
   const {
     isSignUp,
     setIsSignUp,
@@ -17,9 +18,8 @@ export default function Login({isLogin}) {
     error,
     handleSubmit,
   } = useAuth();
-  if (isLogin) {
-    setIsSignUp(false);
-  }
+  useEffect(() =>setIsSignUp(true),[])
+  
 
   return (
     <div className="flex items-center justify-center min-h-screen p-4 w-[100vw]">

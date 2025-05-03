@@ -4,12 +4,11 @@ import Link from 'next/link';
 import { useEffect } from 'react';
 
 export default function Home() {
-
   useEffect(() => {
     fetch('/api/hello')
-      .then(res => res.text())
-      .then(data => console.log(data))
-      .catch(err => console.error('Error:', err));
+      .then((res) => res.text())
+      .then((data) => console.log(data))
+      .catch((err) => console.error('Error:', err));
   }, []);
 
   return (
